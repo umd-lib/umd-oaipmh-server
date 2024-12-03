@@ -1,10 +1,8 @@
 import logging
 from datetime import datetime
 from enum import Enum
-from os import environ
 
 from lxml import etree
-
 # noinspection PyProtectedMember
 from lxml.etree import _Element
 from oai_repo import (

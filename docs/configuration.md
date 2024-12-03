@@ -88,19 +88,19 @@ Configuration of the queries and fields to use with Solr is done via a
 YAML configuration file. Here is an example for fedora:
 
 ```yaml
-base_query: handle:*
-handle_field: handle
+base_query: item__handle__id:*
+handle_field: item__handle__id
 uri_field: id
-last_modified_field: last_modified
+last_modified_field: item__last_modified__dt
 auto_create_sets: True
 auto_set:
-  query: component:Collection
-  name_field: display_title
-  name_query_field: collection_title_facet
+  query: resource_type__facet:Collection
+  name_field: item__title__txt
+  name_query_field: admin_set__facet
 sets:
   - spec: custom_set
     name: Custom Collection
-    filter: collection_title_facet:Foo AND component:Issue
+    filter: presentation_set__facet:Foo AND resource_type__facet:Issue
 ```
 
 And here is an example for avalon:

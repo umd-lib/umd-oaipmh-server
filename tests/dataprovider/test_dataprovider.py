@@ -9,10 +9,18 @@ from oai_repo.exceptions import OAIErrorCannotDisseminateFormat, OAIRepoExternal
 
 from oaipmh.dataprovider import DataProvider, FedoraDataProvider, DataProviderType
 from oaipmh.oai import OAIIdentifier
-from oaipmh.solr import Index, DEFAULT_SOLR_CONFIG
+from oaipmh.solr import Index
 
 environ['DATA_PROVIDER_TYPE'] = 'fedora'
 environ['JWT_SECRET'] = str(uuid4())
+DEFAULT_SOLR_CONFIG = {
+    'base_query': 'item__handle__id:*',
+    'handle_field': 'item__handle__id',
+    'uri_field': 'id',
+    'last_modified_field': 'item__last_modified__dt',
+    'auto_create_sets': False,
+    'sets': [],
+}
 
 
 @pytest.fixture
@@ -28,15 +36,15 @@ def index_with_auto_sets(mock_solr_client):
     return Index(
         solr_client=mock_solr_client,
         config={
-            'base_query': 'handle:*',
-            'handle_field': 'handle',
+            'base_query': 'item__handle__id:*',
+            'handle_field': 'item__handle__id',
             'uri_field': 'id',
-            'last_modified_field': 'last_modified',
+            'last_modified_field': 'item__last_modified__dt',
             'auto_create_sets': True,
             'auto_set': {
-                'query': 'component:Collection',
-                'name_field': 'display_title',
-                'name_query_field': 'collection_title_facet',
+                'query': 'resource_type__facet:Collection',
+                'name_field': 'item__title__txt',
+                'name_query_field': 'admin_set__facet',
             },
             'sets': [],
         })
@@ -133,7 +141,7 @@ def test_get_record_header(mock_solr_client):
     mock_index.get_doc = MagicMock(
         return_value={
             'id': 'oai:fcrepo:foo',
-            'last_modified': '2023-06-16T08:37:29Z',
+            'item__last_modified__dt': '2023-06-16T08:37:29Z',
         }
     )
     provider = FedoraDataProvider(index=mock_index)

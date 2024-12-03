@@ -1,10 +1,13 @@
-base_query: handle:*
-handle_field: handle
+base_query: item__handle__id:*
+handle_field: item__handle__id
 uri_field: id
-last_modified_field: last_modified
+last_modified_field: item__last_modified__dt
 auto_create_sets: True
 auto_set:
-  query: component:Collection
-  name_field: display_title
-  name_query_field: collection_title_facet
-sets: []
+  query: resource_type__facet:Collection
+  name_field: item__title__txt
+  name_query_field: admin_set__facet
+sets:
+- name: Advancing Workers' Rights
+  spec: AWR
+  filter: presentation_set__facet:"Advancing Workers' Rights"

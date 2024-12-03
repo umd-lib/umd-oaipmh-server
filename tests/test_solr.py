@@ -5,7 +5,16 @@ import pysolr
 import pytest
 from oai_repo import OAIRepoExternalException, OAIRepoInternalException
 
-from oaipmh.solr import solr_date_range, Index, DEFAULT_SOLR_CONFIG
+from oaipmh.solr import solr_date_range, Index
+
+DEFAULT_SOLR_CONFIG = {
+    'base_query': 'item__handle__id:*',
+    'handle_field': 'item__handle__id',
+    'uri_field': 'id',
+    'last_modified_field': 'item__last_modified__dt',
+    'auto_create_sets': False,
+    'sets': [],
+}
 
 
 @pytest.mark.parametrize(

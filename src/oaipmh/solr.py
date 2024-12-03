@@ -11,15 +11,6 @@ from oaipmh.oai import get_set_spec
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_SOLR_CONFIG = {
-    'base_query': 'handle:*',
-    'handle_field': 'handle',
-    'uri_field': 'id',
-    'last_modified_field': 'last_modified',
-    'auto_create_sets': False,
-    'sets': [],
-}
-
 
 class Index:
     def __init__(self, config: dict[str, Any], solr_client: pysolr.Solr):
@@ -101,7 +92,7 @@ class Index:
     def get_sets_for_handle(self, handle: str) -> dict[str, dict[str, str]]:
         sets = {}
         for set_spec, set_conf in self.get_sets().items():
-            result = self.solr.search(q=f'{self.handle_field}:{handle}', fq=set_conf['filter'], fl=self.uri_field)
+            result = self.solr.search(q=f'{self.handle_field}:{solr_quoted(handle)}', fq=set_conf['filter'], fl=self.uri_field)
             if len(result):
                 sets[set_spec] = set_conf
         return sets
@@ -128,7 +119,7 @@ class Index:
         return self.search(q='*:*', fq=filter_query, start=start, rows=rows)
 
     def get_doc(self, handle: str) -> dict[str, Any]:
-        results = self.search(q=f'{self.handle_field}:{handle}')
+        results = self.search(q=f'{self.handle_field}:{solr_quoted(handle)}')
         if not results:
             raise OAIRepoExternalException(f'Unable to find handle {handle} in Solr')
         return results.docs[0]
