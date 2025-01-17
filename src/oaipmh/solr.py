@@ -45,6 +45,7 @@ class Index:
         return self.config['last_modified_field']
 
     def search(self, **kwargs):
+        logger.debug(f'Solr search parameters: {kwargs}')
         try:
             return self.solr.search(**kwargs)
         except pysolr.SolrError as e:

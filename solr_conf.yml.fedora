@@ -4,8 +4,8 @@ uri_field: id
 last_modified_field: item__last_modified__dt
 auto_create_sets: True
 auto_set:
-  query: resource_type__facet:Collection
-  name_field: item__title__txt
+  query: adminset__rdf_type__curies:"pcdm:Collection"
+  name_field: adminset__title__txt
   name_query_field: admin_set__facet
 sets:
 - name: Advancing Workers' Rights
