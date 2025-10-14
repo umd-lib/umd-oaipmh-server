@@ -1,13 +1,10 @@
-base_query: item__handle__id:*
-handle_field: item__handle__id
+base_query: handle__id:*
+handle_field: handle__id
 uri_field: id
-last_modified_field: item__last_modified__dt
+last_modified_field: object__last_modified__dt
 auto_create_sets: True
 auto_set:
-  query: adminset__rdf_type__curies:"pcdm:Collection"
-  name_field: adminset__title__txt
+  query: object__rdf_type__curies:"pcdm:Collection"
+  name_field: object__title__display
   name_query_field: admin_set__facet
-sets:
-- name: Advancing Workers' Rights
-  spec: AWR
-  filter: presentation_set__facet:"Advancing Workers' Rights"
+sets: []
