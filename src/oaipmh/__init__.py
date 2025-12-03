@@ -1,3 +1,3 @@
 import importlib.metadata
 
-__version__ = importlib.metadata.version('umd-fcrepo-oaipmh')
+__version__ = importlib.metadata.version('umd-oaipmh-server')
