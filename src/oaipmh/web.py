@@ -15,7 +15,7 @@ from oai_repo.response import OAIResponse
 
 from oaipmh import __version__
 from oaipmh.dataprovider import DataProvider, FedoraDataProvider, DataProviderType
-from oaipmh.solr import Index, DEFAULT_SOLR_CONFIG
+from oaipmh.solr import Index
 
 
 def status(response: OAIResponse) -> int:
@@ -34,7 +34,7 @@ def status(response: OAIResponse) -> int:
 
 def get_config(config_source: Optional[str | TextIO] = None) -> dict[str, Any]:
     if config_source is None:
-        return DEFAULT_SOLR_CONFIG
+        raise RuntimeError("Must specify a configuration file")
     if isinstance(config_source, str):
         with open(config_source) as fh:
             return yaml.safe_load(fh)

@@ -1,10 +1,10 @@
-base_query: handle:*
-handle_field: handle
+base_query: handle__id:*
+handle_field: handle__id
 uri_field: id
-last_modified_field: last_modified
+last_modified_field: object__last_modified__dt
 auto_create_sets: True
 auto_set:
-  query: component:Collection
-  name_field: display_title
-  name_query_field: collection_title_facet
+  query: object__rdf_type__curies:"pcdm:Collection"
+  name_field: object__title__display
+  name_query_field: admin_set__facet
 sets: []

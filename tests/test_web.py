@@ -4,8 +4,17 @@ import pytest
 from oai_repo.response import OAIResponse
 
 from oaipmh.dataprovider import FedoraDataProvider, AvalonDataProvider
-from oaipmh.solr import Index, DEFAULT_SOLR_CONFIG
+from oaipmh.solr import Index
 from oaipmh.web import create_app, get_config, status
+
+DEFAULT_SOLR_CONFIG = {
+    'base_query': 'item__handle__id:*',
+    'handle_field': 'item__handle__id',
+    'uri_field': 'id',
+    'last_modified_field': 'item__last_modified__dt',
+    'auto_create_sets': False,
+    'sets': [],
+}
 
 
 @pytest.fixture
@@ -62,7 +71,8 @@ def test_status_bad_request():
 
 
 def test_get_config_default():
-    assert get_config(None) == DEFAULT_SOLR_CONFIG
+    with pytest.raises(RuntimeError):
+        get_config(None)
 
 
 def test_get_config_from_filename(datadir, sample_config):

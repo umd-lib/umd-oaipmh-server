@@ -19,16 +19,16 @@ class MockSolrResult:
 
     def __iter__(self):
         return iter([
-            {'handle': '1903.1/sample1', 'last_modified': str(datetime.now())},
-            {'handle': '1903.1/sample2', 'last_modified': str(datetime.now())},
-            {'handle': '1903.1/sample3', 'last_modified': str(datetime.now())},
+            {'item__handle__id': '1903.1/sample1', 'item__last_modified__dt': str(datetime.now())},
+            {'item__handle__id': '1903.1/sample2', 'item__last_modified__dt': str(datetime.now())},
+            {'item__handle__id': '1903.1/sample3', 'item__last_modified__dt': str(datetime.now())},
         ])
 
 
 @pytest.fixture
 def mock_solr_client():
     mock_solr = MagicMock(spec=pysolr.Solr)
-    mock_solr.url = 'http://localhost:8983/solr/fcrepo'
+    mock_solr.url = 'http://localhost:8985/solr/fcrepo'
     return mock_solr
 
 
