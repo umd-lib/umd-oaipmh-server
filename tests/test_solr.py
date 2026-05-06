@@ -4,6 +4,7 @@ from unittest.mock import MagicMock
 import pysolr
 import pytest
 from oai_repo import OAIRepoExternalException, OAIRepoInternalException
+from oai_repo.exceptions import OAIErrorBadArgument
 
 from oaipmh.solr import solr_date_range, Index
 
@@ -48,6 +49,15 @@ def test_solr_date_range_invalid(timestamp_from, timestamp_until):
 def test_solr_date_range(timestamp_from, timestamp_until, expected):
     date_range = solr_date_range(timestamp_from, timestamp_until)
     assert date_range == expected
+
+
+def test_solr_date_range_reversed():
+    """Test that reversed from/until dates raise OAIErrorBadArgument."""
+    with pytest.raises(OAIErrorBadArgument, match="'from' date is greater than 'until' date"):
+        solr_date_range(
+            datetime.fromisoformat('2026-05-06'),
+            datetime.fromisoformat('2023-05-05'),
+        )
 
 
 def test_index_with_solr_client(mock_solr_client):

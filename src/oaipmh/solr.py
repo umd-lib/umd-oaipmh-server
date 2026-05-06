@@ -136,4 +136,8 @@ def solr_date_range(timestamp_from: Optional[datetime], timestamp_until: Optiona
         datestamp_until = datestamp_long(timestamp_until) if timestamp_until else '*'
     except AttributeError as e:
         raise TypeError("'timestamp_from' and 'timestamp_until', if present, must be datetime objects") from e
+
+    if timestamp_from and timestamp_until and timestamp_from > timestamp_until:
+        raise OAIErrorBadArgument("'from' date is greater than 'until' date")
+
     return f'[{datestamp_from} TO {datestamp_until}]'

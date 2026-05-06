@@ -18,6 +18,7 @@ test = [
     "pycodestyle",
     "pytest",
     "pytest-cov",
+    "pytest-datadir",
 ]
 [project.scripts]
 fcrepo-oaipmh-server = "oaipmh.server:run"
