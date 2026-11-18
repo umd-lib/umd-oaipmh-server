@@ -1,6 +1,6 @@
 import logging
 from datetime import datetime
-from typing import Any, Optional, Mapping
+from typing import Any, Mapping, Optional
 
 import pysolr
 from oai_repo import OAIRepoExternalException
@@ -93,7 +93,9 @@ class Index:
     def get_sets_for_handle(self, handle: str) -> dict[str, dict[str, str]]:
         sets = {}
         for set_spec, set_conf in self.get_sets().items():
-            result = self.solr.search(q=f'{self.handle_field}:{solr_quoted(handle)}', fq=set_conf['filter'], fl=self.uri_field)
+            result = self.solr.search(q=f'{self.handle_field}:{solr_quoted(handle)}',
+                                      fq=set_conf['filter'],
+                                      fl=self.uri_field)
             if len(result):
                 sets[set_spec] = set_conf
         return sets

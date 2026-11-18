@@ -1,21 +1,32 @@
+[build-system]
+requires = ["setuptools>=77", "setuptools-scm>=8"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+platforms = ["any"]
+
+[tool.setuptools_scm]
+version_scheme = "post-release"
+
 [project]
 name = "umd-oaipmh-server"
-version = "1.3.1"
+dynamic = ["version"]
 dependencies = [
-    "flask",
-    "lxml",
-    "oai-repo",
-    "pysolr",
-    "python-dotenv",
-    "PyYAML",
-    "requests",
-    "requests-jwtauth",
-    "waitress",
-    "Sickle"
+    "flask >= 2.3.2",
+    "lxml >= 4.9.2",
+    "oai-repo >= 0.4.2",
+    "pysolr >= 3.11.0",
+    "python-dotenv >= 1.0.0",
+    "PyYAML >= 6.0",
+    "requests >= 2.31.0",
+    "requests-jwtauth >= 1.0.1",
+    "waitress >= 2.1.2",
+    "Sickle >= 0.7.0"
 ]
-[project.optional-dependencies]
-test = [
-    "pycodestyle",
+
+[dependency-groups]
+dev = [
+    "ruff",
     "pytest",
     "pytest-cov",
     "pytest-datadir",
@@ -23,3 +34,21 @@ test = [
 [project.scripts]
 fcrepo-oaipmh-server = "oaipmh.server:run"
 add-handles = "oaipmh.add_handles:main"
+
+[tool.ruff]
+line-length = 120
+exclude = [
+  # Ignore auto-generated "migrations" directories
+  "migrations"
+]
+
+[tool.ruff.format]
+quote-style = "single"
+
+[tool.ruff.lint]
+# preview is required to enable many pycodestyle rules see
+# https://docs.astral.sh/ruff/rules/
+preview = true
+
+# Enable pycodestyle errors and warnings
+select = ["E", "W"]

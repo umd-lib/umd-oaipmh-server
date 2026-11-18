@@ -19,16 +19,14 @@ for more information.
 
 ## Development Environment
 
-Python version: 3.11
+This project uses uv
 
 ### Installation
 
 ```bash
 git clone git@github.com:umd-lib/umd-oaipmh-server.git
 cd umd-oaipmh-server
-pyenv install --skip-existing $(cat .python-version)
-python -m venv .venv --prompt umd-oaipmh-server-py$(cat .python-version)
-pip install -r requirements.test.txt -e .
+uv sync
 ```
 
 ### Configuration
@@ -69,7 +67,7 @@ For full configuration information, see
 To run the application in debug mode, with hot code reloading:
 
 ```bash
-flask --app "oaipmh.web:app(solr_config_file='solr_conf.yml', data_provider_type='Fedora')" run
+uv run flask --app "oaipmh.web:app(solr_config_file='solr_conf.yml', data_provider_type='Fedora')" run
 ```
 
 The OAI-PMH service will be available at <http://localhost:5000/oai/api>,
@@ -87,7 +85,7 @@ And add `-p {port number}` to the `flask` command:
 
 ```bash
 # for example, to run on port 8000
-flask --app "oaipmh.web:create_app(solr_config_file='solr_conf.yml', data_provider_type='Fedora')" run -p 8000
+uv run flask --app "oaipmh.web:create_app(solr_config_file='solr_conf.yml', data_provider_type='Fedora')" run -p 8000
 ```
 
 ### Testing
@@ -96,42 +94,31 @@ This project uses the [pytest] testing framework. To run the full
 [test suite](tests):
 
 ```bash
-pytest
+uv run pytest
 ```
 
 To run the test suite with coverage information from [pytest-cov]:
 
 ```bash
-pytest --cov src --cov-report term-missing
+uv run pytest --cov src --cov-report term-missing
 ```
 
-This project also uses [pycodestyle] as a style checker and linter:
+This project also uses [ruff] as a style checker and linter:
 
 ```bash
-pycodestyle src
+ruff check
 ```
 
-Configuration of pycodestyle is found in the [tox.ini](tox.ini) file.
+Configuration of ruff is found in the pyproject.toml file.
 
 ### Deploying using Docker
+
+#### Locally
 
 Build the image:
 
 ```bash
 docker build -t docker.lib.umd.edu/oaipmh-server:latest .
-```
-
-If you need to build for multiple architectures (e.g., AMD and ARM), you
-can use `docker buildx`. This assumes you have a builder named "local"
-configured for use with your docker buildx system, and you are logged in
-to a Docker repository that you can push images to:
-
-```bash
-docker buildx build --builder local --platform linux/amd64,linux/arm64 \
-    -t docker.lib.umd.edu/oaipmh-server:latest --push .
-
-# then pull the image so it is available locally
-docker pull docker.lib.umd.edu/oaipmh-server:latest
 ```
 
 Run the container:
@@ -156,6 +143,26 @@ docker run -d -p 5000:5000 \
     docker.lib.umd.edu/oaipmh-server:latest
 ```
 
+#### Building the Production Image
+
+Switch to the Kubernetes "build" namespace:
+
+```bash
+kubectl config use-context build
+```
+
+Create the "docker.lib.umd.edu/grove" Docker image,
+using the git tag uploaded to Github:
+
+```bash
+TAG=<GIT_TAG> && \
+docker buildx build \
+    --build-arg BUILDKIT_CONTEXT_KEEP_GIT_DIR=1 --no-cache --platform linux/amd64 --push --builder=kube \
+    -t docker.lib.umd.edu/grove:$TAG https://github.com/umd-lib/grove.git#$TAG
+```
+
+The Docker image will be automatically pushed to the Nexus.
+
 Note: To refer to services running on the host machine (e.g., Solr) in the
 configuration, you will need to use the hostname `host.docker.internal`
 instead of `localhost`.
@@ -163,5 +170,5 @@ instead of `localhost`.
 [OAI-PMH]: https://www.openarchives.org/pmh/
 [pytest]: https://docs.pytest.org/en/7.3.x/
 [pytest-cov]: https://pypi.org/project/pytest-cov/
-[pycodestyle]: https://pycodestyle.pycqa.org/en/latest/
+[ruff]: https://docs.astral.sh/ruff/
 [add-handles]: docs/add_handles.md
