@@ -151,14 +151,14 @@ Switch to the Kubernetes "build" namespace:
 kubectl config use-context build
 ```
 
-Create the "docker.lib.umd.edu/grove" Docker image,
+Create the "docker.lib.umd.edu/umd-oaipmh-server" Docker image,
 using the git tag uploaded to Github:
 
 ```bash
 TAG=<GIT_TAG> && \
 docker buildx build \
     --build-arg BUILDKIT_CONTEXT_KEEP_GIT_DIR=1 --no-cache --platform linux/amd64 --push --builder=kube \
-    -t docker.lib.umd.edu/grove:$TAG https://github.com/umd-lib/grove.git#$TAG
+    -t docker.lib.umd.edu/umd-oaipmh-server:$TAG https://github.com/umd-lib/umd-oaipmh-server.git#$TAG
 ```
 
 The Docker image will be automatically pushed to the Nexus.
